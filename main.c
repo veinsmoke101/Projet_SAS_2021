@@ -201,7 +201,7 @@ void appSystem(compte_bancaire ** comptes,int chosen)
     case  3:
         if(nombre_compte == 0)
         {
-            if(na3la == 0){
+            /*if(na3la == 0){
                 printf("No Data !");
                 system("pause");
             }else if(na3la == 1){
@@ -212,8 +212,9 @@ void appSystem(compte_bancaire ** comptes,int chosen)
                 printf("Wata sir t9awaad !");
                 system("pause");
             }
-            na3la++;
-
+            na3la++;*/
+            printf("No Data !");
+            system("pause");
 
         }
         else
@@ -236,9 +237,7 @@ void appSystem(compte_bancaire ** comptes,int chosen)
         if(nombre_compte == 0)
         {
             printf("No Data !");
-            printf("\nCliquer un button pour revenir au Menu Principale : ");
-            scanf("%c",&c);
-            getchar();
+            system("pause");
         }
         else
         {
@@ -259,9 +258,7 @@ void appSystem(compte_bancaire ** comptes,int chosen)
         if(nombre_compte == 0)
         {
             printf("No Data !");
-            printf("\nCliquer un button pour revenir au Menu Principale : ");
-            scanf("%c",&c);
-            getchar();
+            system("pause");
         }
         else
         {
@@ -387,16 +384,11 @@ void affichage(compte_bancaire * comptes, int choix)
 
     case  1:
         printCompteBancaire(comptes);
-        printf("Cliquer un button pour revenir au menu affichage : ");
-        scanf("%c",&option);
-        getchar();
+        system("pause");
         break;
     case  2:
         printCompteBancaireDesc(comptes);
-        printf("Cliquer un button pour revenir au menu affichage : ");
-        scanf("%c",&option);
-        getchar();
-
+        system("pause");
         break;
     case  3:
         do
@@ -407,9 +399,8 @@ void affichage(compte_bancaire * comptes, int choix)
         while(montant <= 0.0);
         getchar();
         printCompteBancaireSup(comptes,montant);
-        printf("Cliquer un button pour revenir au menu affichage ");
-        scanf("%c",&option);
-        getchar();
+        system("pause");
+
         break;
     case  4:
         do
@@ -421,9 +412,8 @@ void affichage(compte_bancaire * comptes, int choix)
         while(montant <= 0.0);
         getchar();
         printCompteBancaireSupDesc(comptes,montant);
-        printf("Cliquer un button pour revenir au menu affichage  : ");
-        scanf("%c",&option);
-        getchar();
+        system("pause");
+
         break;
     case  5:
         printf("Entrer le CIN : ");
@@ -433,7 +423,7 @@ void affichage(compte_bancaire * comptes, int choix)
             getchar();
             if(searchCIN(comptes,CIN) != -1 || strcmp(CIN,"0") == 0 )
                 break;
-            printf("Compte n'existe .. Reessayer SVP Ou entrer 0 pour retourner au menu Affichage   !!\n");
+            printf("Compte n'existe pas.. Reessayer SVP Ou entrer 0 pour retourner au menu Affichage   !!\n");
         }
         while(1);
         if(strcmp(CIN,"0") == 0)
@@ -446,9 +436,7 @@ void affichage(compte_bancaire * comptes, int choix)
         }
         else
             printf("Compte n'existe pas !!!\n");
-        printf("Cliquer un button pour revenir au menu affichage  : ");
-        scanf("%c",&option);
-        getchar();
+        system("pause");
         break;
 
     case 0:
