@@ -6,6 +6,7 @@
 
 int nombre_compte = 0;
 int currentSize =5;
+int na3la = 0;
 
 
 typedef struct compte_bancaire
@@ -36,11 +37,13 @@ void printOperationMenu();
 
 
 
-
 int main()
 {
     int a;
     compte_bancaire * comptes = (compte_bancaire * )malloc(currentSize*sizeof(compte_bancaire));
+    comptes->CIN = NULL;
+    comptes->Nom = NULL;
+    comptes->Prenom = NULL;
     if(comptes == NULL)
     {
         printf("Allocation Error in malloc()");
@@ -53,13 +56,20 @@ int main()
         printMenu();
         printf("Merci de choisir un operation a effectue : \n");
         scanf("%d",&a);
+        getchar();
         if(a == 0)
             break;
         appSystem(&comptes,a);
     }
     while(1);
+    if(comptes->CIN != NULL ){
+        free(comptes->CIN);
+        free(comptes->Nom);
+        free(comptes->Prenom);
+    }
 
     free(comptes);
+
     return 0;
 }
 
@@ -159,168 +169,14 @@ void printCompteBancaireSupDesc(compte_bancaire * comptes, double montant)
 
 
 
-/*
-void appSystem(compte_bancaire ** comptes,char chosen)
+void appSystem(compte_bancaire ** comptes,int chosen)
 {
 
-    char  CIN[10], option;
-    int nombreCB, id;
-    double montant;
-
-    switch(chosen)
-    {
-    case  '1':
-        addCompteBancaire(comptes);
-        insertionSort(comptes,nombre_compte);
-        break;
-    case  '2':
-        do
-        {
-            printf("Entrer le nombre des comptes a introduire : ");
-            scanf("%d",&nombreCB);
-            getchar();
-        }
-        while(nombreCB <= 0);
-        for(int i = 0; i < nombreCB; i++)
-            addCompteBancaire(comptes);
-        insertionSort(comptes,nombre_compte);
-        break;
-
-    case  '3':
-
-        printf("Entrer le CIN : ");
-        do
-        {
-            scanf("%s",CIN);
-            if(searchCIN(*comptes,CIN) != -1)
-                break;
-            printf("Compte n'existe .. Reessayer SVP !!\n");
-        }
-        while(1);
-        id = searchCIN(*comptes,CIN);
-        do
-        {
-            printf("Entrer le montant de retrait : ");
-            scanf("%lf",&montant);
-            getchar();
-        }
-        while(montant <= 0.0);
-        (*comptes)[id].Montant -= montant;
-        break;
-
-    case  '4':
-
-        printf("Entrer le CIN : ");
-        do
-        {
-            scanf("%s",CIN);
-            if(searchCIN(*comptes,CIN) != -1)
-                break;
-            printf("Compte n'existe .. Reessayer SVP !!\n");
-        }
-        while(1);
-        id = searchCIN(*comptes,CIN);
-        do
-        {
-            printf("Entrer le montant de depot : ");
-            scanf("%lf",&montant);
-        }
-        while(montant <= 0.0);
-        (*comptes)[id].Montant += montant;
-        break;
-    case  '5':
-        printCompteBancaire(*comptes);
-        printf("Cliquer un button pour revenir au menu principale : ");
-        getchar();
-        scanf("%c",&option);
-        if(option == 'q')
-            exit(EXIT_SUCCESS);
-        break;
-    case  '6':
-        printCompteBancaireDesc(*comptes);
-        printf("Cliquer un button pour revenir au menu principale ou bien 'q' pour quitter : ");
-        getchar();
-        scanf("%c",&option);
-        if(option == 'q')
-            exit(EXIT_SUCCESS);
-        break;
-    case  '7':
-        do
-        {
-            printf("Entrer le montant : ");
-            scanf("%lf",&montant);
-        }
-        while(montant <= 0.0);
-        getchar();
-        printCompteBancaireSup(*comptes,montant);
-        printf("Cliquer un button pour revenir au menu principale ou bien 'q' pour quitter : ");
-        getchar();
-        scanf("%c",&option);
-        if(option == 'q')
-            exit(EXIT_SUCCESS);
-        break;
-    case  '8':
-        do
-        {
-            printf("Entrer le montant : ");
-            scanf("%lf",&montant);
-        }
-        while(montant <= 0.0);
-        getchar();
-        printCompteBancaireSupDesc(*comptes,montant);
-        printf("Cliquer un button pour revenir au menu principale ou bien 'q' pour quitter : ");
-        getchar();
-        scanf("%c",&option);
-        if(option == 'q')
-            exit(EXIT_SUCCESS);
-        break;
-    case  '9':
-        printf("Entrer le CIN : ");
-        do
-        {
-            scanf("%s",CIN);
-            if(searchCIN(*comptes,CIN) != -1 || strcmp(CIN,"0") == 0 )
-                break;
-            printf("Compte n'existe .. Reessayer SVP Ou entrer 0 pour retourner au menu Principale   !!\n");
-        }
-        while(1);
-        if(strcmp(CIN,"0") == 0)
-            break;
-        id = searchCIN(*comptes,CIN);
-        if(searchCIN(*comptes,CIN) != -1)
-        {
-            printf("|  %-20s|  %-25s|  %-25s|  %-20s|\n", "CIN", "Nom", "Prenom", "Montant");
-            printf("|  %-20s|  %-25s|  %-25s|  %-20.2f|\n",(*comptes)[id].CIN,(*comptes)[id].Nom,(*comptes)[id].Prenom,(*comptes)[id].Montant);
-        }
-        else
-            printf("Compte n'existe pas !!!\n");
-        printf("Cliquer un button pour revenir au menu principale ou bien 'q' pour quitter : ");
-        getchar();
-        scanf("%c",&option);
-        if(option == 'q')
-            exit(EXIT_SUCCESS);
-        break;
-    case  '0':
-        break;
-    default:
-        printf("Choix non valide !!!");
-        printf("Cliquer un button pour revenir au menu principale ou bien 'q' pour quitter : ");
-        getchar();
-        scanf("%c",&option);
-        if(option == 'q')
-            exit(EXIT_SUCCESS);
-        break;
-
-    }
-}
-
-*/
-
-
-void appSystem(compte_bancaire ** comptes,int chosen){
-
+    char c;
     int  option;
     int nombreCB;
+    int count =0;
+    int index;
 
 
     switch(chosen)
@@ -343,34 +199,104 @@ void appSystem(compte_bancaire ** comptes,int chosen){
         break;
 
     case  3:
-
-        do
+        if(nombre_compte == 0)
         {
-            system("cls");
-            printOperationMenu();
-            scanf("%d",&option);
-            if(option == 0)
-                break;
-            operation(*comptes,option);
-        }while(1);
+            if(na3la == 0){
+                printf("No Data !");
+                system("pause");
+            }else if(na3la == 1){
+                printf("Sir asahbi bdel sa3a bkhra !");
+                system("pause");
+            }else{
+
+                printf("Wata sir t9awaad !");
+                system("pause");
+            }
+            na3la++;
+
+
+        }
+        else
+        {
+            do
+            {
+                system("cls");
+                printOperationMenu();
+                scanf("%d",&option);
+                if(option == 0)
+                    break;
+                operation(*comptes,option);
+            }
+            while(1);
+        }
+
         break;
     case  4:
-        do
+
+        if(nombre_compte == 0)
         {
-            system("cls");
-            printAffichageMenu();
-            scanf("%d",&option);
-            if(option == 0)
-                break;
-            affichage(*comptes,option);
-        }while(1);
+            printf("No Data !");
+            printf("\nCliquer un button pour revenir au Menu Principale : ");
+            scanf("%c",&c);
+            getchar();
+        }
+        else
+        {
+            do
+            {
+                system("cls");
+                printAffichageMenu();
+                scanf("%d",&option);
+                if(option == 0)
+                    break;
+                affichage(*comptes,option);
+            }
+            while(1);
+        }
         break;
     case  5:
+
+        if(nombre_compte == 0)
+        {
+            printf("No Data !");
+            printf("\nCliquer un button pour revenir au Menu Principale : ");
+            scanf("%c",&c);
+            getchar();
+        }
+        else
+        {
+            if(nombre_compte <= 3)
+            {
+                for(int i = 0; i < nombre_compte; i++)
+                    (*comptes)[i].Montant += (*comptes)[i].Montant*0.013;
+            }
+            else
+            {
+                for(int i = nombre_compte-1; i >= 0; i--)
+                {
+                    if((*comptes)[i].Montant > (*comptes)[i-1].Montant)
+                        count++;
+                    if(count == 3)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+                for(int i = nombre_compte-1; i >= index; i--)
+                {
+                    (*comptes)[i].Montant += (*comptes)[i].Montant*0.013;
+                }
+            }
+            printf("Fedilisation fait avec succees.\nCliquer un button pour revenir au Menu Principale : ");
+            scanf("%c",&c);
+            getchar();
+        }
+
 
         break;
     default:
         printf("Choix non valide !!!");
-        printf("Cliquer un button pour revenir au menu principale ou bien 'q' pour quitter : ");
+        printf("Cliquer un button pour revenir au menu principale ou bien '0' pour quitter : ");
         getchar();
         scanf("%d",&option);
         if(option == 0)
@@ -395,31 +321,6 @@ void printMenu()
 
 }
 
-//int choisirMenu(){
-//
-//}
-
-//void introduireCompte(compte_bancaire * comptes){
-//
-//    char CIN, * Nom = NULL, * Prenom = NULL;
-//    double Montant;
-//    size_t len = 0;
-//
-//    printf("Entrer le CIN : \n");
-//    getline(&CIN,&len,stdin);
-//    printf("Entrer le Nom : \n");
-//    getline(&Nom,&len,stdin);
-//    printf("Entrer le Prenom : \n");
-//    getline(&Prenom,&len,stdin);
-//
-//    do{
-//        printf("Entrer le Montant : \n");
-//        scanf(" %lf",&Montant);
-//    }while(Montant < 0.0);
-//    printf("%s%s%s",CIN,Nom,Prenom);
-//    addCompteBancaire(comptes,CIN,Nom,Prenom,Montant);
-//
-//}
 
 char * removeNewLine(char * C)
 {
@@ -544,7 +445,7 @@ void affichage(compte_bancaire * comptes, int choix)
             printf("|  %-20s|  %-25s|  %-25s|  %-20.2f|\n",comptes[id].CIN,comptes[id].Nom,comptes[id].Prenom,comptes[id].Montant);
         }
         else
-        printf("Compte n'existe pas !!!\n");
+            printf("Compte n'existe pas !!!\n");
         printf("Cliquer un button pour revenir au menu affichage  : ");
         scanf("%c",&option);
         getchar();
@@ -583,19 +484,26 @@ void operation(compte_bancaire * comptes, int choix)
         {
             scanf("%s",CIN);
             getchar();
-            if(searchCIN(comptes,CIN) != -1)
+            if(searchCIN(comptes,CIN) != -1 || strcmp(CIN,"0") == 0 )
                 break;
-            printf("Compte n'existe .. Reessayer SVP !!\n");
+            printf("Compte n'existe .. Reessayer SVP Ou entrer 0 pour retourner au menu Operation   !!\n");
         }
         while(1);
+        if(strcmp(CIN,"0") == 0)
+            break;
         id = searchCIN(comptes,CIN);
         do
         {
-            printf("Entrer le montant de retrait : ");
+            printf("Entrer le montant de retrait Ou entrer 0 pour retourner au menu Operation: ");
             scanf("%lf",&montant);
             getchar();
+            if(montant == 0)
+                break;
         }
-        while(montant <= 0.0);
+        while(montant <= 0.0 || montant > comptes[id].Montant);
+        if(montant == 0){
+            break;
+        }
         comptes[id].Montant -= montant;
         break;
 
@@ -606,11 +514,13 @@ void operation(compte_bancaire * comptes, int choix)
         {
             scanf("%s",CIN);
             getchar();
-            if(searchCIN(comptes,CIN) != -1)
+            if(searchCIN(comptes,CIN) != -1 || strcmp(CIN,"0") == 0 )
                 break;
-            printf("Compte n'existe .. Reessayer SVP !!\n");
+            printf("Compte n'existe .. Reessayer SVP Ou entrer 0 pour retourner au menu Operation   !!\n");
         }
         while(1);
+        if(strcmp(CIN,"0") == 0)
+            break;
         id = searchCIN(comptes,CIN);
         do
         {
