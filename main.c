@@ -6,7 +6,6 @@
 
 int nombre_compte = 0;
 int currentSize =5;
-int na3la = 0;
 
 
 typedef struct compte_bancaire
@@ -19,7 +18,7 @@ typedef struct compte_bancaire
 
 
 
-void addCompteBancaire(compte_bancaire** comptes);
+void addCompteBancaire(compte_bancaire** comptes, char *);
 void printCompteBancaire(compte_bancaire *);
 void printCompteBancaireDesc(compte_bancaire *);
 void printCompteBancaireSup(compte_bancaire *, double );
@@ -62,7 +61,8 @@ int main()
         appSystem(&comptes,a);
     }
     while(1);
-    if(comptes->CIN != NULL ){
+    if(comptes->CIN != NULL )
+    {
         free(comptes->CIN);
         free(comptes->Nom);
         free(comptes->Prenom);
@@ -76,33 +76,32 @@ int main()
 
 
 
-void addCompteBancaire(compte_bancaire** comptes)
+void addCompteBancaire(compte_bancaire** comptes, char * CIN)
 {
 
     nombre_compte++;
-    compte_bancaire * temp = *comptes;
     if(currentSize == nombre_compte)
     {
         currentSize+=5;
-        temp = (compte_bancaire *)realloc(*comptes,sizeof(compte_bancaire)*currentSize);
-        if(temp == NULL)
+        *comptes = (compte_bancaire *)realloc(*comptes,sizeof(compte_bancaire)*currentSize);
+        if(*comptes == NULL)
         {
             printf("Allocation Error in realloc() %d",nombre_compte);
             exit(EXIT_SUCCESS);
         }
-        *comptes = temp;
     }
 
     size_t len = 0;
+
 
     (*comptes)[nombre_compte-1].CIN = NULL;
     (*comptes)[nombre_compte-1].Nom = NULL;
     (*comptes)[nombre_compte-1].Prenom = NULL;
 
 
-    printf("Entrer le CIN de compte %d : \n",nombre_compte);
-    getline(&(*comptes)[nombre_compte-1].CIN,&len,stdin);
-    (*comptes)[nombre_compte-1].CIN = removeNewLine((*comptes)[nombre_compte-1].CIN);
+    (*comptes)[nombre_compte-1].CIN = (char *)malloc(sizeof(char)*strlen(CIN));
+    strcpy((*comptes)[nombre_compte-1].CIN,CIN);
+
 
     printf("Entrer le Nom de compte %d : \n",nombre_compte);
     getline(&(*comptes)[nombre_compte-1].Nom,&len,stdin);
@@ -121,6 +120,7 @@ void addCompteBancaire(compte_bancaire** comptes)
     getchar();
     system("cls");
     printCompteBancaire(*comptes);
+    system("pause");
 
 
 }
@@ -172,7 +172,7 @@ void printCompteBancaireSupDesc(compte_bancaire * comptes, double montant)
 void appSystem(compte_bancaire ** comptes,int chosen)
 {
 
-    char c;
+    char c, CIN[10];
     int  option;
     int nombreCB;
     int count =0;
@@ -182,7 +182,19 @@ void appSystem(compte_bancaire ** comptes,int chosen)
     switch(chosen)
     {
     case  1:
-        addCompteBancaire(comptes);
+        printf("Entrer le CIN de compte %d : \n",nombre_compte+1);
+        do
+        {
+            scanf("%s",CIN);
+            getchar();
+            if(searchCIN(*comptes,CIN) == -1 || strcmp(CIN,"0") == 0 )
+                break;
+            printf("Compte deja existe .. Reessayer SVP Ou entrer 0 pour retourner au menu Operation   !!\n");
+        }
+        while(1);
+        if(strcmp(CIN,"0") == 0)
+            break;
+        addCompteBancaire(comptes,CIN);
         insertionSort(comptes,nombre_compte);
         break;
     case  2:
@@ -194,25 +206,29 @@ void appSystem(compte_bancaire ** comptes,int chosen)
         }
         while(nombreCB <= 0);
         for(int i = 0; i < nombreCB; i++)
-            addCompteBancaire(comptes);
+        {
+            printf("Entrer le CIN de compte %d : \n",nombre_compte+1);
+            do
+            {
+                scanf("%s",CIN);
+                getchar();
+                if(searchCIN(*comptes,CIN) == -1 || strcmp(CIN,"0") == 0 )
+                    break;
+                printf("Compte deja existe .. Reessayer SVP Ou entrer 0 pour retourner au menu Operation   !!\n");
+            }
+            while(1);
+            if(strcmp(CIN,"0") == 0)
+                break;
+            addCompteBancaire(comptes,CIN);
+        }
         insertionSort(comptes,nombre_compte);
         break;
 
     case  3:
         if(nombre_compte == 0)
         {
-            /*if(na3la == 0){
-                printf("No Data !");
-                system("pause");
-            }else if(na3la == 1){
-                printf("Sir asahbi bdel sa3a bkhra !");
-                system("pause");
-            }else{
 
-                printf("Wata sir t9awaad !");
-                system("pause");
-            }
-            na3la++;*/
+
             printf("No Data !");
             system("pause");
 
@@ -375,7 +391,7 @@ void printAffichageMenu()
 void affichage(compte_bancaire * comptes, int choix)
 {
 
-    char  CIN[10], option;
+    char  CIN[10];
     int id;
     double montant;
 
@@ -489,7 +505,8 @@ void operation(compte_bancaire * comptes, int choix)
                 break;
         }
         while(montant <= 0.0 || montant > comptes[id].Montant);
-        if(montant == 0){
+        if(montant == 0)
+        {
             break;
         }
         comptes[id].Montant -= montant;
