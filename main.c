@@ -5,7 +5,7 @@
 
 
 int nombre_compte = 0;
-int currentSize =5;
+int currentSize = 5;
 
 
 typedef struct compte_bancaire
@@ -161,7 +161,7 @@ void printCompteBancaireSupDesc(compte_bancaire * comptes, double montant)
     printf("|  %-20s|  %-25s|  %-25s|  %-20s|\n", "CIN", "Nom", "Prenom", "Montant");
     for(int i = nombre_compte-1; i >= 0; i--)
     {
-        if(comptes[i].Montant < montant)
+        if(comptes[i].Montant <= montant)
             break;
         printf("|  %-20s|  %-25s|  %-25s|  %-20.2f|\n",comptes[i].CIN,comptes[i].Nom,comptes[i].Prenom,comptes[i].Montant);
     }
@@ -172,7 +172,7 @@ void printCompteBancaireSupDesc(compte_bancaire * comptes, double montant)
 void appSystem(compte_bancaire ** comptes,int chosen)
 {
 
-    char c, CIN[10];
+    char CIN[10];
     int  option;
     int nombreCB;
     int count =0;
@@ -227,7 +227,6 @@ void appSystem(compte_bancaire ** comptes,int chosen)
     case  3:
         if(nombre_compte == 0)
         {
-
 
             printf("No Data !");
             system("pause");
@@ -292,6 +291,7 @@ void appSystem(compte_bancaire ** comptes,int chosen)
                     if(count == 3)
                     {
                         index = i;
+                        printf("index : %d\n",index);
                         break;
                     }
                 }
@@ -300,20 +300,15 @@ void appSystem(compte_bancaire ** comptes,int chosen)
                     (*comptes)[i].Montant += (*comptes)[i].Montant*0.013;
                 }
             }
-            printf("Fedilisation fait avec succees.\nCliquer un button pour revenir au Menu Principale : ");
-            scanf("%c",&c);
-            getchar();
+            printf("Fedilisation fait avec succees.\n");
+            system("pause");
         }
 
 
         break;
     default:
-        printf("Choix non valide !!!");
-        printf("Cliquer un button pour revenir au menu principale ou bien '0' pour quitter : ");
-        getchar();
-        scanf("%d",&option);
-        if(option == 0)
-            exit(EXIT_SUCCESS);
+        printf("Choix non valide !!!\n");
+        system("pause");
         break;
 
     }
@@ -413,7 +408,6 @@ void affichage(compte_bancaire * comptes, int choix)
             scanf("%lf",&montant);
         }
         while(montant <= 0.0);
-        getchar();
         printCompteBancaireSup(comptes,montant);
         system("pause");
 
@@ -423,7 +417,6 @@ void affichage(compte_bancaire * comptes, int choix)
         {
             printf("Entrer le montant : ");
             scanf("%lf",&montant);
-            getchar();
         }
         while(montant <= 0.0);
         getchar();
